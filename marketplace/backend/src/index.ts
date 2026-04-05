@@ -11,6 +11,8 @@ import authRoutes from './routes/auth'
 import productRoutes from './routes/products'
 import orderRoutes from './routes/orders'
 import adminRoutes from './routes/admin'
+import verificationRoutes from './routes/verification'
+import notificationRoutes from './routes/notifications'
 
 dotenv.config()
 
@@ -36,6 +38,8 @@ app.use('/auth', authRoutes)
 app.use('/products', productRoutes)
 app.use('/orders', orderRoutes)
 app.use('/admin', adminRoutes)
+app.use('/verification', verificationRoutes)
+app.use('/notifications', notificationRoutes)
 
 // 404 handler
 app.use((req, res) => {

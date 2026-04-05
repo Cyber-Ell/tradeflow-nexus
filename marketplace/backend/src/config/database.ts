@@ -1,13 +1,16 @@
 import sqlite3 from 'sqlite3'
 import { open, Database } from 'sqlite'
+import fs from 'fs'
 import path from 'path'
+import { runMigrations } from '../db/migrate'
 
 let db: Database | null = null
 
 export async function initializeDatabase(): Promise<Database> {
   if (db) return db
 
-  const dbPath = process.env.DATABASE_PATH || './data/marketplace.db'
+  const dbPath = resolveDatabasePath(process.env.DATABASE_PATH)
+  fs.mkdirSync(path.dirname(dbPath), { recursive: true })
   
   db = await open({
     filename: dbPath,
@@ -16,6 +19,7 @@ export async function initializeDatabase(): Promise<Database> {
 
   await db.exec('PRAGMA foreign_keys = ON')
   await createTables()
+  await runMigrations(db)
 
   return db
 }
@@ -88,7 +92,7 @@ async function createTables(): Promise<void> {
       id TEXT PRIMARY KEY,
       orderId TEXT NOT NULL,
       amount REAL NOT NULL,
-      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'completed', 'failed', 'refunded')),
+      status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending', 'authorized', 'escrow_held', 'released', 'failed', 'refunded', 'disputed')),
       paymentMethod TEXT,
       paystackRef TEXT,
       escrowHeldUntil TEXT,
@@ -147,4 +151,17 @@ export async function closeDatabase(): Promise<void> {
     await db.close()
     db = null
   }
+}
+
+function resolveDatabasePath(databasePath = './data/marketplace.db'): string {
+  if (path.isAbsolute(databasePath)) {
+    return databasePath
+  }
+
+  // Keep the default database under the repo-level data directory regardless
+  // of whether the backend is launched from the workspace root or backend/.
+  const backendDir = path.resolve(__dirname, '..', '..')
+  const repoRoot = path.resolve(backendDir, '..')
+
+  return path.resolve(repoRoot, databasePath)
 }

@@ -1,7 +1,9 @@
 export type UserRole = 'vendor' | 'wholesaler' | 'admin'
 export type UserStatus = 'pending' | 'approved' | 'rejected' | 'active'
-export type OrderStatus = 'pending' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
-export type PaymentStatus = 'pending' | 'completed' | 'failed' | 'refunded'
+export type OrderStatus = 'pending_payment' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'completed' | 'cancelled' | 'disputed'
+export type PaymentStatus = 'pending' | 'authorized' | 'escrow_held' | 'released' | 'failed' | 'refunded' | 'disputed'
+export type VerificationStatus = 'pending' | 'approved' | 'rejected'
+export type DisputeStatus = 'open' | 'under_review' | 'resolved' | 'rejected'
 
 export interface User {
   id: string
@@ -23,8 +25,17 @@ export interface Product {
   description?: string
   price: number
   quantity: number
+  moq: number
   category?: string
   images?: string
+  imageUrl?: string
+  size?: string
+  length?: string
+  colors?: string[]
+  specifications?: Record<string, string>
+  vendor?: string
+  verificationStatus?: VerificationStatus | null
+  priceTiers?: ProductPriceTier[]
   createdAt: string
   updatedAt: string
 }
@@ -39,6 +50,7 @@ export interface Order {
   paymentRef?: string
   trackingNumber?: string
   deliveryAddress?: string
+  orderItems?: OrderItem[]
   createdAt: string
   updatedAt: string
 }
@@ -51,6 +63,38 @@ export interface Payment {
   paymentMethod?: string
   paystackRef?: string
   escrowHeldUntil?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface OrderItem {
+  id: string
+  orderId: string
+  productId: string
+  productName: string
+  unitPrice: number
+  quantity: number
+  createdAt: string
+}
+
+export interface ProductPriceTier {
+  id: string
+  productId: string
+  minQuantity: number
+  unitPrice: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Verification {
+  id: string
+  userId: string
+  documentType: string
+  documentNumber: string
+  status: VerificationStatus
+  submittedAt: string
+  reviewedAt?: string
+  notes?: string
   createdAt: string
   updatedAt: string
 }
@@ -73,6 +117,40 @@ export interface LogisticsTracking {
   estimatedDelivery?: string
   logisticsProvider?: string
   externalRef?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ShipmentEvent {
+  id: string
+  orderId: string
+  trackingId?: string
+  status: string
+  location?: string
+  notes?: string
+  createdAt: string
+}
+
+export interface Notification {
+  id: string
+  userId: string
+  type: string
+  title: string
+  message: string
+  relatedEntityType?: string
+  relatedEntityId?: string
+  readAt?: string
+  createdAt: string
+}
+
+export interface Dispute {
+  id: string
+  orderId: string
+  openedByUserId: string
+  reason: string
+  description?: string
+  status: DisputeStatus
+  resolution?: string
   createdAt: string
   updatedAt: string
 }

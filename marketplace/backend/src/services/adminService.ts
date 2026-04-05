@@ -57,6 +57,7 @@ export async function getPlatformStats(): Promise<{
   totalVendors: number
   totalWholesalers: number
   pendingApprovals: number
+  pendingVerifications: number
   totalOrders: number
   totalRevenue: number
 }> {
@@ -66,6 +67,7 @@ export async function getPlatformStats(): Promise<{
   const vendorStats = await db.get("SELECT COUNT(*) as total FROM users WHERE role = 'vendor'")
   const wholesalerStats = await db.get("SELECT COUNT(*) as total FROM users WHERE role = 'wholesaler'")
   const pendingStats = await db.get("SELECT COUNT(*) as total FROM users WHERE role = 'vendor' AND status = 'pending'")
+  const verificationStats = await db.get("SELECT COUNT(*) as total FROM verifications WHERE status = 'pending'")
   const orderStats = await db.get("SELECT COUNT(*) as total FROM orders")
   const revenueStats = await db.get("SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE status = 'delivered'")
 
@@ -74,6 +76,7 @@ export async function getPlatformStats(): Promise<{
     totalVendors: vendorStats.total,
     totalWholesalers: wholesalerStats.total,
     pendingApprovals: pendingStats.total,
+    pendingVerifications: verificationStats.total,
     totalOrders: orderStats.total,
     totalRevenue: revenueStats.total,
   }

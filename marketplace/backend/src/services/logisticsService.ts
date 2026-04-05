@@ -1,7 +1,8 @@
 import { getDatabase } from '../config/database'
-import { LogisticsTracking } from '../types'
+import { LogisticsTracking, ShipmentEvent } from '../types'
 import { v4 as uuid } from 'uuid'
 import axios from 'axios'
+import { updateOrderStatus } from './orderService'
 
 const GIG_LOGISTICS_KEY = process.env.GIG_LOGISTICS_API_KEY || ''
 const GIG_LOGISTICS_URL = process.env.GIG_LOGISTICS_BASE_URL || 'https://api.giglogistics.com'
@@ -41,6 +42,8 @@ export async function createLogisticsTracking(
       [trackingId, orderId, response.data.tracking_number, 'pending', 'gig_logistics', response.data.shipment_id, estimatedDelivery.toISOString()]
     )
 
+    await createShipmentEvent(orderId, trackingId, 'pending', pickupLocation, 'Shipment created with logistics provider')
+
     return getLogisticsTrackingByOrderId(orderId) as Promise<LogisticsTracking>
   } catch (error) {
     console.error('Logistics API error:', error)
@@ -62,6 +65,8 @@ async function createLocalLogisticsTracking(orderId: string): Promise<LogisticsT
      VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
     [trackingId, orderId, trackingNumber, 'pending', 'local', estimatedDelivery.toISOString()]
   )
+
+  await createShipmentEvent(orderId, trackingId, 'pending', 'Vendor Warehouse', 'Shipment created locally')
 
   const tracking = await db.get('SELECT * FROM logistics_tracking WHERE id = ?', [trackingId])
   return tracking
@@ -96,6 +101,21 @@ export async function updateLogisticsStatus(orderId: string, status: string, loc
 
   const updated = await getLogisticsTrackingByOrderId(orderId)
   if (!updated) throw new Error('Failed to update tracking')
+
+  await createShipmentEvent(orderId, updated.id, status, location, 'Shipment status updated')
+
+  if (status === 'picked_up' || status === 'in_transit' || status === 'out_for_delivery') {
+    try {
+      await updateOrderStatus(orderId, 'shipped')
+    } catch (error) {
+      // Ignore invalid duplicate transitions from repeated tracking updates.
+    }
+  }
+
+  if (status === 'delivered') {
+    await updateOrderStatus(orderId, 'delivered')
+  }
+
   return updated
 }
 
@@ -112,4 +132,27 @@ export async function simulateDeliveryUpdate(orderId: string): Promise<void> {
     const nextLocation = locations[currentIndex + 1]
     await updateLogisticsStatus(orderId, nextStatus, nextLocation)
   }
+}
+
+export async function getShipmentEventsByOrderId(orderId: string): Promise<ShipmentEvent[]> {
+  const db = await getDatabase()
+  return await db.all<ShipmentEvent[]>(
+    'SELECT * FROM shipment_events WHERE orderId = ? ORDER BY createdAt ASC',
+    [orderId]
+  )
+}
+
+async function createShipmentEvent(
+  orderId: string,
+  trackingId: string | undefined,
+  status: string,
+  location?: string,
+  notes?: string
+): Promise<void> {
+  const db = await getDatabase()
+  await db.run(
+    `INSERT INTO shipment_events (id, orderId, trackingId, status, location, notes, createdAt)
+     VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)`,
+    [uuid(), orderId, trackingId || null, status, location || null, notes || null]
+  )
 }

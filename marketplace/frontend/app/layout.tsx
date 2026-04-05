@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import AppShell from '@/components/AppShell'
+import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
   title: 'MarketHub - B2B Marketplace',
@@ -16,7 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-neutral-50 text-neutral-900">
-        {children}
+        <AppShell>{children}</AppShell>
+        <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
       </body>
     </html>
   )

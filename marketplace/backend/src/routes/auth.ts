@@ -13,7 +13,7 @@ router.post('/register', asyncHandler(async (req: Request, res: Response) => {
       data: { user, token },
     })
   } catch (error: any) {
-    throw new AppError(error.message, 400)
+    throw error instanceof AppError ? error : new AppError(error.message, 400)
   }
 }))
 
@@ -25,7 +25,7 @@ router.post('/login', asyncHandler(async (req: Request, res: Response) => {
       data: { user, token },
     })
   } catch (error: any) {
-    throw new AppError(error.message, 401)
+    throw error instanceof AppError ? error : new AppError(error.message, 401)
   }
 }))
 

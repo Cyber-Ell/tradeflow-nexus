@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --surface-base: #f5f7fb;
+  --surface-card: rgba(255, 255, 255, 0.82);
+  --surface-strong: #ffffff;
+  --border-soft: rgba(15, 23, 42, 0.08);
+  --ink-strong: #14213d;
+  --ink-muted: #5b6475;
+  --brand-primary: #1f4ed8;
+  --shadow-soft: 0 18px 60px rgba(15, 23, 42, 0.08);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -13,9 +24,13 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background:
+    radial-gradient(circle at top left, rgba(31, 78, 216, 0.08), transparent 30%),
+    radial-gradient(circle at top right, rgba(15, 118, 110, 0.08), transparent 28%),
+    linear-gradient(180deg, #f9fbff 0%, #f4f7fb 100%);
 }
 
 @layer components {
@@ -40,7 +55,10 @@ body {
   }
 
   .card {
-    @apply bg-white rounded-lg shadow border border-neutral-200;
+    @apply rounded-2xl border border-neutral-200;
+    background: var(--surface-card);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(14px);
   }
 
   .input-field {
@@ -61,5 +79,28 @@ body {
 
   .badge-success {
     @apply badge bg-green-100 text-green-800;
+  }
+
+  .panel {
+    @apply rounded-3xl border;
+    border-color: var(--border-soft);
+    background: var(--surface-strong);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em];
+    background: rgba(31, 78, 216, 0.08);
+    color: var(--brand-primary);
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-semibold tracking-tight;
+    color: var(--ink-strong);
+  }
+
+  .section-copy {
+    @apply text-base md:text-lg leading-8;
+    color: var(--ink-muted);
   }
 }

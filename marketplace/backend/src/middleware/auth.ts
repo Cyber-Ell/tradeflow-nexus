@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { verifyToken } from '../utils/jwt'
 import { AuthPayload } from '../types'
+import { getDatabase } from '../config/database'
 
 declare global {
   namespace Express {
@@ -10,7 +11,7 @@ declare global {
   }
 }
 
-export function authenticateToken(req: Request, res: Response, next: NextFunction): void {
+export async function authenticateToken(req: Request, res: Response, next: NextFunction): Promise<void> {
   const authHeader = req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
 
@@ -22,6 +23,19 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
   const payload = verifyToken(token)
   if (!payload) {
     res.status(401).json({ success: false, message: 'Invalid or expired token' })
+    return
+  }
+
+  const db = await getDatabase()
+  const user = await db.get('SELECT id, role, status, email FROM users WHERE id = ?', [payload.userId])
+
+  if (!user) {
+    res.status(401).json({ success: false, message: 'User not found' })
+    return
+  }
+
+  if (user.status === 'rejected') {
+    res.status(403).json({ success: false, message: 'Account has been rejected' })
     return
   }
 

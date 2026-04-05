@@ -1,5 +1,5 @@
 import { getDatabase } from '../config/database'
-import { Payment, PaymentStatus } from '../types'
+import { Payment } from '../types'
 import { v4 as uuid } from 'uuid'
 import axios from 'axios'
 
@@ -29,7 +29,7 @@ export async function initializePayment(orderId: string, amount: number, email: 
     await db.run(
       `INSERT INTO payments (id, orderId, amount, status, paymentMethod, paystackRef, createdAt, updatedAt)
        VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-      [paymentId, orderId, amount, 'pending', 'paystack', response.data.data.reference]
+      [paymentId, orderId, amount, 'authorized', 'paystack', response.data.data.reference]
     )
 
     return response.data.data.authorization_url
@@ -62,7 +62,7 @@ export async function verifyPayment(reference: string): Promise<{ success: boole
       if (payment) {
         await db.run(
           `UPDATE payments SET status = ?, escrowHeldUntil = ?, updatedAt = CURRENT_TIMESTAMP WHERE paystackRef = ?`,
-          ['completed', escrowReleaseDate.toISOString(), reference]
+          ['escrow_held', escrowReleaseDate.toISOString(), reference]
         )
       }
 
@@ -85,7 +85,7 @@ export async function releaseEscrowPayment(orderId: string): Promise<void> {
   const payment = await getPaymentByOrderId(orderId)
 
   if (!payment) throw new Error('Payment not found')
-  if (payment.status !== 'completed') throw new Error('Payment not completed')
+  if (payment.status !== 'escrow_held') throw new Error('Payment is not currently held in escrow')
 
   // In production, this would transfer funds to vendor
   // For now, just update status
