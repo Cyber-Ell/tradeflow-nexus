@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -8,7 +9,32 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        background: 'hsl(var(--color-background) / <alpha-value>)',
+        surface: {
+          DEFAULT: 'hsl(var(--color-surface) / <alpha-value>)',
+          muted: 'hsl(var(--color-surface-muted) / <alpha-value>)',
+          strong: 'hsl(var(--color-surface-strong) / <alpha-value>)',
+        },
+        text: {
+          DEFAULT: 'hsl(var(--color-text) / <alpha-value>)',
+          muted: 'hsl(var(--color-text-muted) / <alpha-value>)',
+          inverse: 'hsl(var(--color-text-inverse) / <alpha-value>)',
+        },
+        border: 'hsl(var(--color-border) / <alpha-value>)',
         primary: {
+          DEFAULT: 'hsl(var(--color-primary) / <alpha-value>)',
+          hover: 'hsl(var(--color-primary-hover) / <alpha-value>)',
+          foreground: 'hsl(var(--color-primary-foreground) / <alpha-value>)',
+        },
+        error: {
+          DEFAULT: 'hsl(var(--color-error) / <alpha-value>)',
+          surface: 'hsl(var(--color-error-surface) / <alpha-value>)',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--color-success) / <alpha-value>)',
+          surface: 'hsl(var(--color-success-surface) / <alpha-value>)',
+        },
+        brand: {
           50: '#f0f7ff',
           100: '#e0effe',
           500: '#0066cc',

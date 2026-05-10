@@ -11,6 +11,7 @@ import api from '@/lib/api'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { initializeAuth, useAuthStore } from '@/lib/store'
+import ThemeToggle from '@/components/ThemeToggle'
 
 interface LoginFormData {
   email: string
@@ -81,10 +82,10 @@ export default function LoginPage() {
                 <BadgeCheck className="h-4 w-4" />
                 Secure platform access
               </span>
-              <h1 className="text-4xl font-semibold tracking-tight text-slate-950 md:text-5xl">
+              <h1 className="text-4xl font-semibold tracking-tight text-text md:text-5xl">
                 Continue into your MarketHub workspace.
               </h1>
-              <p className="mt-5 text-lg leading-8 text-slate-600">
+              <p className="mt-5 text-lg leading-8 text-text-muted">
                 Sign in to manage onboarding, approve suppliers, configure catalog pricing, and move wholesale orders through protected workflows.
               </p>
 
@@ -96,13 +97,13 @@ export default function LoginPage() {
                 ].map((item, index) => (
                   <motion.div
                     key={item}
-                    className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                    className="flex items-start gap-3 rounded-2xl border border-border bg-surface-muted p-4"
                     initial={{ opacity: 0, x: -12 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.12 * index + 0.15, duration: 0.4, ease: 'easeOut' }}
                   >
-                    <ShieldCheck className="mt-0.5 h-5 w-5 text-emerald-600" />
-                    <p className="text-sm leading-6 text-slate-700">{item}</p>
+                    <ShieldCheck className="mt-0.5 h-5 w-5 text-success" />
+                    <p className="text-sm leading-6 text-text">{item}</p>
                   </motion.div>
                 ))}
               </div>
@@ -115,34 +116,37 @@ export default function LoginPage() {
               transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
             >
               <div className="mb-8">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-900">
-                  <LockKeyhole className="h-6 w-6" />
+                <div className="mb-4 flex items-center justify-between">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface-muted text-text">
+                    <LockKeyhole className="h-6 w-6" />
+                  </div>
+                  <ThemeToggle />
                 </div>
-                <h2 className="text-3xl font-semibold text-slate-950">Sign In</h2>
-                <p className="mt-2 text-base text-slate-600">Access your dashboard and continue marketplace operations.</p>
+                <h2 className="text-3xl font-semibold text-text">Sign In</h2>
+                <p className="mt-2 text-base text-text-muted">Access your dashboard and continue marketplace operations.</p>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Email</label>
+                  <label className="mb-2 block text-sm font-medium text-text">Email</label>
                   <input
                     type="email"
                     className="input-field"
                     placeholder="you@company.com"
                     {...register('email', { required: 'Email is required', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' } })}
                   />
-                  {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+                  {errors.email && <p className="mt-1 text-sm text-error">{errors.email.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Password</label>
+                  <label className="mb-2 block text-sm font-medium text-text">Password</label>
                   <input
                     type="password"
                     className="input-field"
                     placeholder="Enter password"
                     {...register('password', { required: 'Password is required' })}
                   />
-                  {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+                  {errors.password && <p className="mt-1 text-sm text-error">{errors.password.message}</p>}
                 </div>
 
                 <button type="submit" disabled={loading} className="btn-primary w-full gap-2">
@@ -151,9 +155,9 @@ export default function LoginPage() {
                 </button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-neutral-600">
+              <p className="mt-6 text-center text-sm text-text-muted">
                 Don&apos;t have an account?{' '}
-                <Link href="/signup" className="font-semibold text-primary-600 hover:text-primary-700">
+                <Link href="/signup" className="font-semibold text-primary hover:text-primary-hover">
                   Create one
                 </Link>
               </p>

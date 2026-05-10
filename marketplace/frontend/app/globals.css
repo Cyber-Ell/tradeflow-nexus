@@ -3,14 +3,57 @@
 @tailwind utilities;
 
 :root {
-  --surface-base: #f5f7fb;
-  --surface-card: rgba(255, 255, 255, 0.82);
-  --surface-strong: #ffffff;
-  --border-soft: rgba(15, 23, 42, 0.08);
-  --ink-strong: #14213d;
-  --ink-muted: #5b6475;
-  --brand-primary: #1f4ed8;
+  --color-background: 220 38% 97%;
+  --color-surface: 0 0% 100%;
+  --color-surface-muted: 220 30% 96%;
+  --color-surface-strong: 0 0% 100%;
+  --color-text: 221 39% 15%;
+  --color-text-muted: 218 11% 40%;
+  --color-text-inverse: 0 0% 100%;
+  --color-border: 217 28% 88%;
+  --color-primary: 223 75% 47%;
+  --color-primary-hover: 223 72% 40%;
+  --color-primary-foreground: 0 0% 100%;
+  --color-error: 0 75% 50%;
+  --color-error-surface: 0 85% 96%;
+  --color-success: 152 68% 35%;
+  --color-success-surface: 152 66% 94%;
+
+  --surface-base: hsl(var(--color-background));
+  --surface-card: hsl(var(--color-surface) / 0.82);
+  --surface-strong: hsl(var(--color-surface-strong));
+  --border-soft: hsl(var(--color-border) / 0.9);
+  --ink-strong: hsl(var(--color-text));
+  --ink-muted: hsl(var(--color-text-muted));
+  --brand-primary: hsl(var(--color-primary));
   --shadow-soft: 0 18px 60px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme='dark'] {
+  --color-background: 222 31% 10%;
+  --color-surface: 222 26% 14%;
+  --color-surface-muted: 222 24% 18%;
+  --color-surface-strong: 222 24% 16%;
+  --color-text: 210 40% 96%;
+  --color-text-muted: 214 18% 72%;
+  --color-text-inverse: 221 39% 15%;
+  --color-border: 217 19% 27%;
+  --color-primary: 217 88% 61%;
+  --color-primary-hover: 217 89% 68%;
+  --color-primary-foreground: 222 47% 11%;
+  --color-error: 0 84% 65%;
+  --color-error-surface: 0 36% 20%;
+  --color-success: 152 55% 52%;
+  --color-success-surface: 152 32% 22%;
+
+  --surface-base: hsl(var(--color-background));
+  --surface-card: hsl(var(--color-surface) / 0.84);
+  --surface-strong: hsl(var(--color-surface-strong));
+  --border-soft: hsl(var(--color-border));
+  --ink-strong: hsl(var(--color-text));
+  --ink-muted: hsl(var(--color-text-muted));
+  --brand-primary: hsl(var(--color-primary));
+  --shadow-soft: 0 20px 56px rgba(0, 0, 0, 0.35);
 }
 
 * {
@@ -27,10 +70,17 @@ body {
   font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: hsl(var(--color-text));
+  background-color: hsl(var(--color-background));
   background:
-    radial-gradient(circle at top left, rgba(31, 78, 216, 0.08), transparent 30%),
-    radial-gradient(circle at top right, rgba(15, 118, 110, 0.08), transparent 28%),
-    linear-gradient(180deg, #f9fbff 0%, #f4f7fb 100%);
+    radial-gradient(circle at top left, hsl(var(--color-primary) / 0.09), transparent 30%),
+    radial-gradient(circle at top right, hsl(var(--color-success) / 0.09), transparent 28%),
+    linear-gradient(180deg, hsl(var(--color-background)) 0%, hsl(var(--color-surface-muted)) 100%);
+}
+
+html.theme-ready,
+html.theme-ready * {
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease, box-shadow 200ms ease;
 }
 
 @layer components {
@@ -39,11 +89,24 @@ body {
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200;
+    @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200;
+    color: hsl(var(--color-primary-foreground));
+    background: hsl(var(--color-primary));
+  }
+
+  .btn-primary:hover {
+    background: hsl(var(--color-primary-hover));
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 border border-neutral-300 text-base font-medium rounded-lg text-neutral-700 bg-white hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-all duration-200;
+    @apply inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200;
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text));
+    background: hsl(var(--color-surface));
+  }
+
+  .btn-secondary:hover {
+    background: hsl(var(--color-surface-muted));
   }
 
   .btn-sm {
@@ -62,7 +125,10 @@ body {
   }
 
   .input-field {
-    @apply w-full px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    @apply w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent;
+    border-color: hsl(var(--color-border));
+    color: hsl(var(--color-text));
+    background: hsl(var(--color-surface));
   }
 
   .badge {
