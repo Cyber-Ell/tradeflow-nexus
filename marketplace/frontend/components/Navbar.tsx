@@ -71,28 +71,28 @@ export default function Navbar() {
   if (!mounted || !hasHydrated) return null
 
   return (
-    <nav className="bg-white border-b border-neutral-200 shadow-sm sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 border-b border-border bg-surface-strong shadow-sm">
       <div className="container-custom">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center text-white">
               <ShoppingBag className="w-4 h-4" />
             </div>
-            <span className="font-bold text-lg text-primary-900">MarketHub</span>
+            <span className="text-lg font-bold text-text-primary">MarketHub</span>
           </Link>
 
           <div className="flex items-center space-x-6">
             {user ? (
               <>
-                <span className="text-sm text-neutral-600">
+                <span className="text-sm text-text-secondary">
                   {user.name}
                   <span className="ml-2 badge-primary">{user.role}</span>
                 </span>
-                <div className="flex items-center space-x-4 border-l border-neutral-200 pl-4">
+                <div className="flex items-center space-x-4 border-l border-border pl-4">
                   <div className="relative">
                     <button
                       type="button"
-                      className="relative inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900"
+                      className="relative inline-flex items-center gap-2 text-sm text-text-secondary transition hover:text-text-primary"
                       onClick={() => setShowNotifications((current) => !current)}
                     >
                       <Bell className="w-4 h-4" />
@@ -105,12 +105,12 @@ export default function Navbar() {
                     </button>
 
                     {showNotifications && (
-                      <div className="absolute right-0 top-10 z-50 w-96 rounded-2xl border border-neutral-200 bg-white p-4 shadow-xl">
+                      <div className="absolute right-0 top-10 z-50 w-96 rounded-2xl border border-border bg-surface-strong p-4 shadow-xl">
                         <div className="mb-3 flex items-center justify-between">
-                          <p className="text-sm font-semibold text-neutral-900">Notifications</p>
+                          <p className="text-sm font-semibold text-text-primary">Notifications</p>
                           <button
                             type="button"
-                            className="text-xs text-primary-600 hover:text-primary-700"
+                            className="text-xs text-primary transition hover:opacity-80"
                             onClick={loadNotifications}
                           >
                             Refresh
@@ -126,38 +126,38 @@ export default function Navbar() {
                                 onClick={() => handleNotificationClick(notification.id, notification.readAt)}
                                 className={`w-full rounded-xl border p-3 text-left transition ${
                                   notification.readAt
-                                    ? 'border-neutral-200 bg-neutral-50'
-                                    : 'border-primary-200 bg-primary-50/60'
+                                    ? 'border-border bg-surface-muted'
+                                    : 'border-primary/30 bg-primary/10'
                                 }`}
                               >
                                 <div className="flex items-start justify-between gap-3">
                                   <div>
-                                    <p className="text-sm font-medium text-neutral-900">{notification.title}</p>
-                                    <p className="mt-1 text-xs leading-5 text-neutral-600">{notification.message}</p>
+                                    <p className="text-sm font-medium text-text-primary">{notification.title}</p>
+                                    <p className="mt-1 text-xs leading-5 text-text-secondary">{notification.message}</p>
                                   </div>
                                   {notification.readAt && <CheckCheck className="mt-0.5 h-4 w-4 text-emerald-600" />}
                                 </div>
-                                <p className="mt-2 text-[11px] uppercase tracking-[0.18em] text-neutral-400">
+                                <p className="mt-2 text-[11px] uppercase tracking-[0.18em] text-text-muted">
                                   {new Date(notification.createdAt).toLocaleString()}
                                 </p>
                               </button>
                             ))}
                           </div>
                         ) : (
-                          <div className="rounded-xl border border-dashed border-neutral-200 p-6 text-center text-sm text-neutral-500">
+                          <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-text-muted">
                             No notifications yet
                           </div>
                         )}
                       </div>
                     )}
                   </div>
-                  <Link href={`/dashboard/${user.role}`} className="text-sm text-primary-600 hover:text-primary-700 inline-flex items-center gap-2">
+                  <Link href={`/dashboard/${user.role}`} className="inline-flex items-center gap-2 text-sm text-primary transition hover:opacity-80">
                     <LayoutDashboard className="w-4 h-4" />
                     Dashboard
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="text-sm text-neutral-600 hover:text-neutral-900 inline-flex items-center gap-2"
+                    className="inline-flex items-center gap-2 text-sm text-text-secondary transition hover:text-text-primary"
                   >
                     <LogOut className="w-4 h-4" />
                     Logout
@@ -166,7 +166,7 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link href="/login" className="text-sm text-neutral-600 hover:text-neutral-900 inline-flex items-center gap-2">
+                <Link href="/login" className="inline-flex items-center gap-2 text-sm text-text-secondary transition hover:text-text-primary">
                   <LogIn className="w-4 h-4" />
                   Login
                 </Link>

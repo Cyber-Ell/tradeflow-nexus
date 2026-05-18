@@ -9,31 +9,30 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: 'hsl(var(--color-background) / <alpha-value>)',
-        surface: {
-          DEFAULT: 'hsl(var(--color-surface) / <alpha-value>)',
-          muted: 'hsl(var(--color-surface-muted) / <alpha-value>)',
-          strong: 'hsl(var(--color-surface-strong) / <alpha-value>)',
+        bg: {
+          primary: 'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
+          card: 'var(--bg-card)',
         },
         text: {
-          DEFAULT: 'hsl(var(--color-text) / <alpha-value>)',
-          muted: 'hsl(var(--color-text-muted) / <alpha-value>)',
-          inverse: 'hsl(var(--color-text-inverse) / <alpha-value>)',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
         },
-        border: 'hsl(var(--color-border) / <alpha-value>)',
-        primary: {
-          DEFAULT: 'hsl(var(--color-primary) / <alpha-value>)',
-          hover: 'hsl(var(--color-primary-hover) / <alpha-value>)',
-          foreground: 'hsl(var(--color-primary-foreground) / <alpha-value>)',
+        accent: {
+          DEFAULT: 'var(--accent)',
+          hover: 'var(--accent-hover)',
         },
-        error: {
-          DEFAULT: 'hsl(var(--color-error) / <alpha-value>)',
-          surface: 'hsl(var(--color-error-surface) / <alpha-value>)',
+        border: 'var(--border)',
+        background: 'var(--bg-primary)',
+        surface: {
+          DEFAULT: 'var(--bg-card)',
+          muted: 'var(--bg-secondary)',
+          strong: 'var(--bg-card)',
         },
-        success: {
-          DEFAULT: 'hsl(var(--color-success) / <alpha-value>)',
-          surface: 'hsl(var(--color-success-surface) / <alpha-value>)',
-        },
+        primary: 'var(--accent)',
+        error: '#ef4444',
+        success: '#10b981',
         brand: {
           50: '#f0f7ff',
           100: '#e0effe',

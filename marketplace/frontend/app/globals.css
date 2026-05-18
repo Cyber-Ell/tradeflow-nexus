@@ -3,56 +3,44 @@
 @tailwind utilities;
 
 :root {
-  --color-background: 220 38% 97%;
-  --color-surface: 0 0% 100%;
-  --color-surface-muted: 220 30% 96%;
-  --color-surface-strong: 0 0% 100%;
-  --color-text: 221 39% 15%;
-  --color-text-muted: 218 11% 40%;
-  --color-text-inverse: 0 0% 100%;
-  --color-border: 217 28% 88%;
-  --color-primary: 223 75% 47%;
-  --color-primary-hover: 223 72% 40%;
-  --color-primary-foreground: 0 0% 100%;
-  --color-error: 0 75% 50%;
-  --color-error-surface: 0 85% 96%;
-  --color-success: 152 68% 35%;
-  --color-success-surface: 152 66% 94%;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --border: #e2e8f0;
 
-  --surface-base: hsl(var(--color-background));
-  --surface-card: hsl(var(--color-surface) / 0.82);
-  --surface-strong: hsl(var(--color-surface-strong));
-  --border-soft: hsl(var(--color-border) / 0.9);
-  --ink-strong: hsl(var(--color-text));
-  --ink-muted: hsl(var(--color-text-muted));
-  --brand-primary: hsl(var(--color-primary));
+  --surface-base: var(--bg-primary);
+  --surface-card: color-mix(in srgb, var(--bg-card) 82%, transparent);
+  --surface-strong: var(--bg-card);
+  --border-soft: var(--border);
+  --ink-strong: var(--text-primary);
+  --ink-muted: var(--text-secondary);
+  --brand-primary: var(--accent);
   --shadow-soft: 0 18px 60px rgba(15, 23, 42, 0.08);
 }
 
-[data-theme='dark'] {
-  --color-background: 222 31% 10%;
-  --color-surface: 222 26% 14%;
-  --color-surface-muted: 222 24% 18%;
-  --color-surface-strong: 222 24% 16%;
-  --color-text: 210 40% 96%;
-  --color-text-muted: 214 18% 72%;
-  --color-text-inverse: 221 39% 15%;
-  --color-border: 217 19% 27%;
-  --color-primary: 217 88% 61%;
-  --color-primary-hover: 217 89% 68%;
-  --color-primary-foreground: 222 47% 11%;
-  --color-error: 0 84% 65%;
-  --color-error-surface: 0 36% 20%;
-  --color-success: 152 55% 52%;
-  --color-success-surface: 152 32% 22%;
+.dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --border: #334155;
 
-  --surface-base: hsl(var(--color-background));
-  --surface-card: hsl(var(--color-surface) / 0.84);
-  --surface-strong: hsl(var(--color-surface-strong));
-  --border-soft: hsl(var(--color-border));
-  --ink-strong: hsl(var(--color-text));
-  --ink-muted: hsl(var(--color-text-muted));
-  --brand-primary: hsl(var(--color-primary));
+  --surface-base: var(--bg-primary);
+  --surface-card: color-mix(in srgb, var(--bg-card) 84%, transparent);
+  --surface-strong: var(--bg-card);
+  --border-soft: var(--border);
+  --ink-strong: var(--text-primary);
+  --ink-muted: var(--text-secondary);
+  --brand-primary: var(--accent);
   --shadow-soft: 0 20px 56px rgba(0, 0, 0, 0.35);
 }
 
@@ -70,12 +58,12 @@ body {
   font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: hsl(var(--color-text));
-  background-color: hsl(var(--color-background));
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
   background:
-    radial-gradient(circle at top left, hsl(var(--color-primary) / 0.09), transparent 30%),
-    radial-gradient(circle at top right, hsl(var(--color-success) / 0.09), transparent 28%),
-    linear-gradient(180deg, hsl(var(--color-background)) 0%, hsl(var(--color-surface-muted)) 100%);
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent) 9%, transparent), transparent 30%),
+    radial-gradient(circle at top right, color-mix(in srgb, #10b981 9%, transparent), transparent 28%),
+    linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
 }
 
 html.theme-ready,
@@ -90,23 +78,23 @@ html.theme-ready * {
 
   .btn-primary {
     @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200;
-    color: hsl(var(--color-primary-foreground));
-    background: hsl(var(--color-primary));
+    color: var(--bg-primary);
+    background: var(--accent);
   }
 
   .btn-primary:hover {
-    background: hsl(var(--color-primary-hover));
+    background: var(--accent-hover);
   }
 
   .btn-secondary {
     @apply inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200;
-    border-color: hsl(var(--color-border));
-    color: hsl(var(--color-text));
-    background: hsl(var(--color-surface));
+    border-color: var(--border);
+    color: var(--text-primary);
+    background: var(--bg-card);
   }
 
   .btn-secondary:hover {
-    background: hsl(var(--color-surface-muted));
+    background: var(--bg-secondary);
   }
 
   .btn-sm {
@@ -126,9 +114,9 @@ html.theme-ready * {
 
   .input-field {
     @apply w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:border-transparent;
-    border-color: hsl(var(--color-border));
-    color: hsl(var(--color-text));
-    background: hsl(var(--color-surface));
+    border-color: var(--border);
+    color: var(--text-primary);
+    background: var(--bg-card);
   }
 
   .badge {
@@ -136,15 +124,19 @@ html.theme-ready * {
   }
 
   .badge-primary {
-    @apply badge bg-primary-100 text-primary-800;
+    @apply badge;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
   }
 
   .badge-accent {
-    @apply badge bg-accent-100 text-accent-800;
+    @apply badge bg-accent-50 text-accent-700;
   }
 
   .badge-success {
-    @apply badge bg-green-100 text-green-800;
+    @apply badge;
+    color: #10b981;
+    background: color-mix(in srgb, #10b981 14%, transparent);
   }
 
   .panel {
